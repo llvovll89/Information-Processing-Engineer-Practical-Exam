@@ -291,4 +291,5 @@ const rounds = [
 ['2026-1','Bridge·Observer·DB 설계 단계·비기능 요구·ISMS·HDLC','비슷한 용어를 목적별로 구별하고 짧은 단답으로 회상한다.',['design','database','security','network']],
 ['2026-2','구조체·상속·딕셔너리·외부 조인·상관 서브쿼리·SRT·서브넷','코드와 SQL, 계산형을 고르게 연습한다. 프리픽스는 주소 수에서 역산한다.',['c','java','python','sql','os','network']]
 ];
+require('./supplement')(courses, sources);
 module.exports={courses,sources,rounds};

@@ -99,3 +99,26 @@
  .next-prev a:last-child{justify-content:flex-start;text-align:left}
 }
 @media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
+.lesson-guide{padding:24px;background:#f0f6f2;border:1px solid var(--line);border-radius:var(--radius);margin:24px 0 32px}
+.lesson-guide h2{font-size:21px;margin:12px 0}
+.lesson-guide details{margin-top:20px}
+.lesson-guide summary,.recall summary{cursor:pointer;padding:10px 0;font-weight:700}
+.lesson-guide ul{padding-left:22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px}
+.lesson-route{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.lesson-route a{padding:10px 14px;background:white;border:1px solid var(--line);border-radius:7px;text-decoration:none;font-weight:700}
+.worked-example,.recall{margin:20px 0;padding:18px 20px;border-radius:8px;background:#f6f8fa;border:1px solid var(--line)}
+.worked-example h3,.recall h3{font-size:16px;margin:0 0 12px}
+.worked-example ol{padding-left:22px;margin:0}
+.worked-example li+li{margin-top:10px}
+.recall{background:#f2f7f2;border-left:3px solid var(--accent)}
+.recall details[open]{border-top:1px solid var(--line);margin-top:12px}
+.lesson-table{max-width:100%;overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:8px}
+.lesson-table table{border-collapse:collapse;min-width:440px;width:100%;font-size:14px;text-align:left}
+.lesson-table caption{text-align:left;padding:14px;font-weight:700;background:#f4f7f5}
+.lesson-table th,.lesson-table td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+.lesson-table thead{background:#eef3f0}
+.lesson-table tbody th{font-weight:600}
+.toc{max-height:calc(100dvh - 120px);overflow-y:auto;overscroll-behavior:contain;padding-right:8px}
+.toc .toc-group{display:block;margin:18px 0 8px;color:var(--accent)}
+@media(max-width:760px){.lesson-guide{padding:18px}.lesson-guide ul{grid-template-columns:1fr}.lesson-route{display:grid;grid-template-columns:1fr 1fr}.lesson-route a{font-size:13px;padding:12px 10px}.worked-example,.recall{padding:16px}.lesson-table table{font-size:13px}}
+@media print{.lesson-guide{break-inside:avoid}.lesson-table{overflow:visible}.lesson-table table{min-width:0}.recall{background:white}.worked-example,.recall{break-inside:avoid}.toc-group{display:none}}
