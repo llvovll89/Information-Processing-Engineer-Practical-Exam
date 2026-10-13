@@ -24,21 +24,28 @@
  document.addEventListener('change',e=>{const el=e.target;if(el.matches('[data-done]')){state.done[el.dataset.done]=el.checked;save();refresh();}});
  document.addEventListener('input',e=>{if(e.target.matches('[data-answer]')){state.answers[e.target.dataset.answer]=e.target.value;save();}});
  document.addEventListener('click',e=>{const el=e.target.closest('[data-rate]');if(!el)return;if(el.dataset.rate==='clear')delete state.ratings[el.dataset.id];else state.ratings[el.dataset.id]=el.dataset.rate;if(submitted&&mockQuestions.some(q=>q.id===el.dataset.id)){if(el.dataset.rate==='clear')delete mockRatings[el.dataset.id];else mockRatings[el.dataset.id]=el.dataset.rate;}save();refresh();toast(el.dataset.rate==='clear'?'풀이 상태를 해제했습니다.':'풀이 상태를 저장했습니다.');});
+ let menuOpener;
  const setMobileMenu=open=>{
+  const wasOpen=document.body.classList.contains('nav-open');
+  if(open&&!wasOpen)menuOpener=document.activeElement;
   document.body.classList.toggle('nav-open',open);
   $('.mobile-toggle')?.setAttribute('aria-expanded',String(open));
+  $('.dock-menu')?.setAttribute('aria-expanded',String(open));
   const sidebar=$('.sidebar');
   if(sidebar&&matchMedia('(max-width:760px)').matches){sidebar.inert=!open;sidebar.setAttribute('aria-hidden',String(!open));}
+  $('.workspace').inert=open;
+  $('.mobile-dock').inert=open;
   const scrim=$('.nav-scrim');
   if(scrim)scrim.hidden=!open;
   if(open)$('.mobile-close')?.focus();
+  else if(wasOpen&&menuOpener?.isConnected&&matchMedia('(max-width:760px)').matches)menuOpener.focus();
  };
  $('.mobile-toggle')?.addEventListener('click',()=>setMobileMenu(true));
  $('.dock-menu')?.addEventListener('click',()=>setMobileMenu(true));
  $('.mobile-close')?.addEventListener('click',()=>setMobileMenu(false));
  $('.nav-scrim')?.addEventListener('click',()=>setMobileMenu(false));
  $('#navigation')?.addEventListener('click',e=>{if(e.target.closest('a'))setMobileMenu(false);});
- const syncMobileMenu=()=>{const sidebar=$('.sidebar');if(!sidebar)return;if(matchMedia('(max-width:760px)').matches)setMobileMenu(document.body.classList.contains('nav-open'));else{document.body.classList.remove('nav-open');sidebar.inert=false;sidebar.removeAttribute('aria-hidden');$('.nav-scrim').hidden=true;}};
+ const syncMobileMenu=()=>{const sidebar=$('.sidebar');if(!sidebar)return;if(matchMedia('(max-width:760px)').matches)setMobileMenu(document.body.classList.contains('nav-open'));else{document.body.classList.remove('nav-open');sidebar.inert=false;sidebar.removeAttribute('aria-hidden');$('.nav-scrim').hidden=true;$('.workspace').inert=false;$('.mobile-dock').inert=false;$('.mobile-toggle').setAttribute('aria-expanded','false');$('.dock-menu').setAttribute('aria-expanded','false');}};
  addEventListener('resize',syncMobileMenu,{passive:true});
  syncMobileMenu();
  $('#print-page')?.addEventListener('click',()=>window.print());
@@ -46,8 +53,32 @@
  let printClosed=[];
  window.addEventListener('beforeprint',()=>{if(document.body.classList.contains('mock-active'))return;printClosed=$$('details:not([open])');printClosed.forEach(d=>d.open=true);});
  window.addEventListener('afterprint',()=>{printClosed.forEach(d=>d.open=false);printClosed=[];});
- const toggleSearch=()=>{const p=$('#search-panel');p.hidden=!p.hidden;$('#search-toggle').setAttribute('aria-expanded',String(!p.hidden));if(!p.hidden)$('#global-search').focus();};
+ const closeReading=()=>{ $('#reading-panel').hidden=true;$('#reading-toggle').setAttribute('aria-expanded','false'); };
+ const toggleSearch=()=>{const p=$('#search-panel');p.hidden=!p.hidden;$('#search-toggle').setAttribute('aria-expanded',String(!p.hidden));if(!p.hidden){closeReading();$('#global-search').focus();}else $('#search-toggle').focus();};
  $('#search-toggle')?.addEventListener('click',toggleSearch);
+ $('#search-close')?.addEventListener('click',toggleSearch);
+ $('#reading-toggle')?.addEventListener('click',()=>{const p=$('#reading-panel');p.hidden=!p.hidden;$('#reading-toggle').setAttribute('aria-expanded',String(!p.hidden));if(!p.hidden){$('#search-panel').hidden=true;$('#search-toggle').setAttribute('aria-expanded','false');$('#reading-close').focus();}});
+ $('#reading-close')?.addEventListener('click',()=>{closeReading();$('#reading-toggle').focus();});
+ const READING_KEY='engineer-practical-reading-v1';
+ const applyReading=preferences=>{
+  const size=['normal','large','larger'].includes(preferences?.size)?preferences.size:'normal';
+  const theme=['system','light','dark'].includes(preferences?.theme)?preferences.theme:'system';
+  document.documentElement.dataset.readingSize=size;
+  document.documentElement.dataset.theme=theme;
+  $(`[name="reading-size"][value="${size}"]`).checked=true;
+  $('#reading-theme').value=theme;
+ };
+ try{applyReading(JSON.parse(localStorage.getItem(READING_KEY)||'null'));}catch{applyReading(null);}
+ const saveReading=()=>{const preferences={size:$('[name="reading-size"]:checked').value,theme:$('#reading-theme').value};applyReading(preferences);try{localStorage.setItem(READING_KEY,JSON.stringify(preferences));}catch{toast('이 브라우저에서는 읽기 설정을 저장할 수 없습니다.');}};
+ $$('[name="reading-size"],#reading-theme').forEach(el=>el.addEventListener('change',saveReading));
+ document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!$('#reading-panel').hidden){closeReading();$('#reading-toggle').focus();}
+  if(e.key!=='Tab'||!document.body.classList.contains('nav-open'))return;
+  const items=$$('.sidebar a,.sidebar button').filter(el=>el.getClientRects().length);
+  const first=items[0],last=items[items.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+ });
  document.addEventListener('keydown',e=>{if(e.key==='/'&&!e.target.matches('input,textarea,select')&&!e.target.isContentEditable){e.preventDefault();if($('#search-panel').hidden)toggleSearch();else $('#global-search').focus();}if(e.key==='Escape'&&document.body.classList.contains('nav-open')){setMobileMenu(false);$('.mobile-toggle')?.focus();return;}if(e.key==='Escape'&&!$('#search-panel').hidden){toggleSearch();$('#search-toggle').focus();}});
  $('#global-search')?.addEventListener('input',e=>{const term=e.target.value.trim().toLocaleLowerCase();const result=$('#search-results');if(!term){result.innerHTML='';return;}const found=window.STUDY_SEARCH.filter(x=>(x.title+' '+x.course+' '+x.text).toLocaleLowerCase().includes(term));result.innerHTML=`<p class="muted">${found.length}개 검색 결과${found.length>30?' · 처음 30개 표시':''}</p>`+found.slice(0,30).map(x=>`<a href="${esc(x.url)}"><strong>${esc(x.title)}</strong><small>${esc(x.course)} · ${esc(x.text.slice(0,90))}…</small></a>`).join('');});
  $('#export-progress')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify({...state,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='실기-학습기록-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('학습 기록 백업 파일을 저장합니다.');});

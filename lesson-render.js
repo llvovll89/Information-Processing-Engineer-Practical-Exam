@@ -7,6 +7,6 @@ function details(s) {
  return comparison+steps+recall;
 }
 function guide(c) {
- return `<section class="lesson-guide"><span class="tag">기초부터 실전까지</span><h2>${esc(c.learningPath.title)}</h2><p>${esc(c.learningPath.text)}</p><div class="lesson-route"><a href="#section-${c.learningPath.start}">① 기초·상세 설명</a><a href="#section-0">② 핵심 개념 정리</a><a href="#exercises">③ 단원 문제 풀이</a><a href="practice.html?course=${c.id}">④ 문제은행 반복</a></div><details><summary>추가된 상세 학습 ${c.sections.length-c.originalSections}개 펼쳐보기</summary><ul>${c.sections.slice(c.originalSections).map((s,i)=>`<li><a href="#section-${c.originalSections+i}">${esc(s.title)}</a></li>`).join('')}</ul></details></section>`;
+ return `<section class="lesson-guide"><span class="tag">기초부터 실전까지</span><h2>${esc(c.learningPath.title)}</h2><p>${esc(c.learningPath.text)}</p><div class="lesson-route"><a href="#section-${c.learningPath.start}">① 기초·상세 설명</a><a href="#section-0">② 핵심 개념 정리</a><a href="#exercises">③ 단원 문제 풀이</a><a href="practice.html?course=${c.id}">④ 문제은행 반복</a></div><details><summary>추가된 상세 학습 ${c.sections.length-c.originalSections}개 펼쳐보기</summary><ul>${c.sections.slice(c.originalSections).map((s,i)=>`<li><a href="#section-${c.originalSections+i}">${esc(s.title)}</a></li>`).join('')}</ul></details><details class="mobile-toc"><summary>이 단원 목차 ${c.sections.length}개</summary><nav aria-label="이 단원 목차">${c.sections.map((s,i)=>`<a href="#section-${i}">${esc(s.title)}</a>`).join('')}<a href="#exercises">단원 문제 풀이</a></nav></details></section>`;
 }
 module.exports={paragraphs,details,guide};
