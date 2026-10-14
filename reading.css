@@ -1,6 +1,6 @@
 /* Study surfaces: 12px containers, 8px controls. Layers: header 10, dock 35,
    reading/search 40, scrim 45, drawer 50. No decorative motion. */
-@font-face{font-family:"Pretendard Variable";src:url("fonts/PretendardVariable.woff2") format("woff2");font-style:normal;font-weight:45 920;font-display:swap}
+@font-face{font-family:"Silgi Study Sans";src:url("fonts/SilgiStudySans.woff2") format("woff2");font-style:normal;font-weight:45 920;font-display:swap}
 :root{color-scheme:light;--reading-size:16px;--code-bg:#eef1f4;--code-ink:#213b45;--control-line:#adbdc5;--pressed:#11523f;--wrong:#924d10}
 :root[data-reading-size=large]{--reading-size:18px}
 :root[data-reading-size=larger]{--reading-size:20px}
@@ -8,7 +8,7 @@
 @media(prefers-color-scheme:dark){
  :root:not([data-theme=light]){color-scheme:dark;--bg:#171e22;--paper:#20292e;--ink:#e6edf0;--muted:#b2c0c7;--line:#435057;--accent:#88d4b5;--soft:#233c34;--code-bg:#121b21;--code-ink:#d4e6ef;--control-line:#7b8d96;--pressed:#a4e4ca;--wrong:#f2c08a}
 }
-body{font-family:"Pretendard Variable","Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;font-size:var(--reading-size)}
+body{font-family:"Silgi Study Sans","Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;font-size:var(--reading-size)}
 button,.button{min-height:44px;background:var(--paper);color:var(--ink);border-radius:8px;touch-action:manipulation}
 button.primary,.button.primary{background:var(--accent);color:var(--paper)}
 button:active,.button:active{transform:translateY(1px)}

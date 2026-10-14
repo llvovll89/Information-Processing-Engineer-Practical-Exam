@@ -1,0 +1,9 @@
+Silgi Study Sans is a modified character subset of Pretendard Variable.
+Copyright (c) 2021, Kil Hyung-jin (https://github.com/orioncactus/pretendard).
+The original Reserved Font Name is Pretendard. The modified subset uses
+Silgi Study Sans as its internal family name and SilgiStudySans as its
+PostScript prefix. Both the original and subset are distributed under the
+SIL Open Font License 1.1 in Pretendard-LICENSE.txt.
+
+Rebuild the subset after content changes with: py -3 subset-font.py
+Source font: PretendardVariable.woff2 (unchanged).
